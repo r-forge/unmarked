@@ -15,5 +15,5 @@ LazyLoad: yes
 LazyData: yes
 Collate: 'classes.R' 'unmarkedEstimate.R' 'mapInfo.R' 'unmarkedFrame.R'
     'unmarkedFit.R' 'utils.R' 'markovMN.R' 'colext.R' 'distsamp.R' 'pcountOpen.R'
-    'mnMix.R' 'multinomPois.R' 'occu.R' 'occuRN.R' 'pcount.R'
+    'mnMix.R' 'multinomPois.R' 'occu.R' 'occuRN.R' 'pcount.R' 'pcountOpen.R'
     'unmarkedFitList.R' 'unmarkedLinComb.R'

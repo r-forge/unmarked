@@ -40,19 +40,24 @@ setClass("unmarkedMultFrame",
 
 ## a class for distance sampling data
 setClass("unmarkedFrameDS", 
-		representation(
-				dist.breaks = "numeric",
-				tlength = "numeric",
-				survey = "character",
-				unitsIn = "character"),
-		contains = "unmarkedFrame",
-		validity = function(object) 
-		{
-			J <- numY(object)
-			db <- object@dist.breaks
-			if(J == length(db) - 1 && db[1] == 0) TRUE
-			else "ncol(y) must equal length(dist.breaks)-1 and 
-						dist.breaks[1] must equal 0"
+	representation(
+		dist.breaks = "numeric",
+		tlength = "numeric",
+		survey = "character",
+		unitsIn = "character"),
+	contains = "unmarkedFrame",
+	validity = function(object) {
+		errors <- character(0)
+		J <- numY(object)
+		db <- object@dist.breaks
+		if(J != length(db) - 1)
+			errors <- c(errors, "ncol(y) must equal length(dist.breaks)-1")
+		if(db[1] != 0)
+			errors <- c(errors, "dist.breaks[1] must equal 0")
+		if(!is.null(obsCovs(object)))
+			"obsCovs cannot be used with distsamp"
+		if(length(errors) == 0) TRUE	
+			else errors
 		})
 
 
@@ -69,6 +74,18 @@ setClass("unmarkedFrameMPois",
 			samplingMethod = "character",
 			piFun = "character"),
 		contains = "unmarkedFrame")
+		
+		
+setClass("unmarkedFramePCountOpen",
+		representation(
+			delta = "matrix"),
+		contains = "unmarkedFrame")
+		
+		
+
+
+
+		
 
 ################### CONSTRUCTORS ###############################################
 
@@ -189,6 +206,35 @@ unmarkedFrameMPois <- function(y, siteCovs = NULL, obsCovs = NULL, type, obsToY,
 	umf
 }
 
+
+
+unmarkedFramePCountOpen <- function(y, siteCovs = NULL, obsCovs = NULL, mapInfo,
+ 	plotArea = NULL, delta) 
+{
+	J <- ncol(y)
+	if(missing(plotArea) || is.null(plotArea)) plotArea <- rep(1, nrow(y))		
+	if(missing(delta))
+		delta <- matrix(1, nrow(y), ncol(y) - 1)
+	if(nrow(delta) != nrow(y) | ncol(delta) != ncol(y) - 1)
+		stop("Dimensions of delta matrix should be nrow(y), ncol(y)-1")
+	if(class(obsCovs) == "list") {
+		obsVars <- names(obsCovs)
+    for(i in seq(length(obsVars))) {
+    	if(!(class(obsCovs[[i]]) %in% c("matrix", "data.frame")))
+        	stop("At least one element of obsCovs is not a matrix or data frame.")
+    	if(ncol(obsCovs[[i]]) != ncol(y) | nrow(obsCovs[[i]]) != nrow(y))
+        	stop("At least one matrix in obsCovs has incorrect number of dimensions.")
+    	}
+	if(is.null(obsNum)) obsNum <- ncol(obsCovs[[1]])
+	obsCovs <- data.frame(lapply(obsCovs, function(x) as.vector(t(x))))
+  	}
+	umf <- new("unmarkedFramePCountOpen", y = y, siteCovs = siteCovs, 
+		obsCovs = obsCovs, obsToY = diag(J), 
+		plotArea = plotArea, delta = delta)
+	return(umf)
+}
+
+
 ################ SHOW METHODS ##################################################
 
 
@@ -267,6 +313,9 @@ setGeneric("obsCovs<-", function(object, value) standardGeneric("obsCovs<-"))
 setReplaceMethod("obsCovs", "unmarkedFrame", function(object, value) {
 			object@obsCovs <- as.data.frame(value)
 			object
+		})
+setReplaceMethod("obsCovs", "unmarkedFrameDS", function(object, value) {
+			stop("unmarkedFrameDS objects cannot have obsCovs")
 		})
 
 

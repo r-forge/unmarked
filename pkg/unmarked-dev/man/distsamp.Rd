@@ -65,7 +65,8 @@ abundance effects in distance sampling. \emph{Ecology} 85, pp. 1591-1597.}
 	}
 
 
-\examples{## Line transect examples
+\examples{
+## Line transect examples
 
 data(linetran)
 
@@ -85,37 +86,35 @@ hist(ltUMF)
 
 # Some methods to use on fitted model
 summary(fm1)
-coef(fm1, type="det", altNames=TRUE)
-backTransform(fm1, whichEstimate="det")
+backTransform(fm1, whichEstimate="state") 	# animals / ha
+exp(coef(fm1, type="state", altNames=TRUE)) # same 
+backTransform(fm1, whichEstimate="det") # half-normal SD
 vcov(fm1, altNames=TRUE)
 confint(fm1, type = "state")
-predict(fm1, type = "state")
-hist(fm1)	# This only works when there are no detection covariates
+hist(fm1, xlab="Distance (m)")	# Only works when there are no detection covars
 
 # Half-normal. Abundance output. No covariates. Note that transect length
 # must be accounted for so abundance is animals per km of transect.
-summary(fm2 <- distsamp(~ 1 ~ 1, ltUMF, output="abund", unitsOut="kmsq"))
+(fm2 <- distsamp(~ 1 ~ 1, ltUMF, output="abund", unitsOut="kmsq"))
 
 # Halfnormal. Covariates affecting both density and and detection.  
-(fm3 <- distsamp(~ poly(area, 2) + habitat ~ habitat, ltUMF))
+(fm3 <- distsamp(~area + habitat ~ habitat, ltUMF))
 
 # Negative exponential detection function.
 (fm4 <- distsamp(~ 1 ~ 1, ltUMF, key="exp"))
-hist(fm4, col="blue", ylim=c(0, 0.1), xlab="Distance (m)")
 
 # Hazard-rate detection function. Density output in hectares.
-summary(fmhz <- distsamp(~ 1 ~ 1, ltUMF, keyfun="hazard"))
-hist(fmhz)
-
+(fm5 <- distsamp(~ 1 ~ 1, ltUMF, keyfun="hazard"))
 
 # Plot detection function.
-fmhz.shape <- exp(coef(fmhz, type="det"))
-fmhz.scale <- exp(coef(fmhz, type="scale"))
+fmhz.shape <- exp(coef(fm5, type="det"))
+fmhz.scale <- exp(coef(fm5, type="scale"))
 plot(function(x) gxhaz(x, shape=fmhz.shape, scale=fmhz.scale), 0, 25, 
 	xlab="Distance (m)", ylab="Detection probability")
 
 # Uniform detection function. Density output in hectars.
-(fmu <- distsamp(~ 1 ~ 1, ltUMF, key="uniform"))
+(fm6 <- distsamp(~ 1 ~ 1, ltUMF, key="uniform"))
+
 
 ## Point transect example
 
@@ -128,8 +127,8 @@ ptUMF <- with(pointtran, {
 	})
 
 # Half-normal. Output is animals / ha on log-scale. No covariates.
-summary(fmp1 <- distsamp(~ 1 ~ 1, ptUMF))
-hist(fmp1, ylim=c(0, 0.07))
+(fmp1 <- distsamp(~ 1 ~ 1, ptUMF))
+hist(fmp1, ylim=c(0, 0.07), xlab="Distance (m)")
 
 }
 

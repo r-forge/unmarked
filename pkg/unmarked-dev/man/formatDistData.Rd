@@ -27,7 +27,8 @@ were detected. See the example for how to add levels to a factor.}
 \examples{
 # Create a data.frame containing distances of animals detected
 # along 4 transects.
-dat <- data.frame(transect=gl(4,5, labels=letters[1:4]), distance=rpois(20, 10))
+dat <- data.frame(transect=gl(4, 5, labels=letters[1:4]), 
+	distance=runif(20, 0, 20))
 dat
 
 # Look at your transect names.
@@ -39,7 +40,7 @@ levels(dat$transect) <- c(levels(dat$transect), "e")
 levels(dat$transect)
 
 # Distance cut points defining distance intervals
-cp <- c(6, 8, 10, 12, 14, 18)
+cp <- c(0, 5, 10, 15, 20)
 
 # Create formated response data.frame
 yDat <- formatDistData(dat, "distance", "transect", cp) 

@@ -1,6 +1,6 @@
 \name{pcount}
 \alias{pcount}
-\title{Fit the N-mixture point count model...}
+\title{Fit the N-mixture point count model.}
 \usage{pcount(formula, data, K, mixture=c("P", "NB"), starts, method="BFGS",
     control=list(), se=TRUE)}
 \description{Fit the N-mixture point count model}

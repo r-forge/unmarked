@@ -566,6 +566,11 @@ setMethod("residuals", "unmarkedFitOccuRN", function(object, ...)
 		r <- y - e
 		return(r)
 	})
+	
+	
+setMethod("deviance", "unmarkedFit", function(object, ...)
+	sum(residuals(object)^2, na.rm=TRUE)
+	)
 
 
 
@@ -732,7 +737,8 @@ setMethod("getP", "unmarkedFitDS", function(object, na.rm = TRUE)
 			scale <- exp(coef(object, type="scale"))
 			p <- sapply(shape, function(x) cp.haz(d = d, shape = x, 
 				scale = scale, survey = survey))
-			})
+			},
+		uniform = p <- 1)
     p <- matrix(p, M, J, byrow = TRUE)
 	return(p)
 })

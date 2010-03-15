@@ -1,19 +1,21 @@
 # Methods needed from other packages
 importFrom(stats, confint, fitted, coef, vcov, predict, update, profile, 
 	simulate, residuals)
+	simulate, residuals, deviance)
 importFrom(graphics, plot, hist)
 importFrom(utils, head)
 importFrom(reshape, melt, cast, recast)
 
 # Fitting functions
-export(occu, occuRN, pcount, multinomPois, distsamp, mnMix, colext, umHMM)
+export(occu, occuRN, pcount, pcountOpen, multinomPois, distsamp, mnMix, colext,
+	umHMM)
 export(removalPiFun, doublePiFun)
 
 # S4 classes ... do all these need to be exported?
 exportClasses(unmarkedFit, unmarkedFitOccu, unmarkedFitDS, unmarkedFitPCount,
 	unmarkedFitMPois, unmarkedFrame, unmarkedFrameOccu, unmarkedFramePCount, 
 	unmarkedFrameMPois, unmarkedFrameDS, unmarkedMultFrame, 
-	unmarkedEstimate, unmarkedFitList, unmarkedModSel)
+	unmarkedFramePCountOpen, unmarkedEstimate, unmarkedFitList, unmarkedModSel)
 
 # Methods
 exportMethods(backTransform, coef, confint, coordinates, fitted, 
@@ -21,11 +23,12 @@ exportMethods(backTransform, coef, confint, coordinates, fitted,
 	numSites, numY, obsCovs, obsNum, "obsCovs<-", obsToY, "obsToY<-", parboot,
 	plot, hist, predict, profile, projection, powerAnalysis, residuals, 
 	sampleSize, SE, show, simulate, siteCovs, "siteCovs<-", summary, update, 
-	vcov, yearlySiteCovs, "yearlySiteCovs<-", "[")
+	deviance, vcov, yearlySiteCovs, "yearlySiteCovs<-", "[")
 
 # Constructors
 export(unmarkedEstimate, fitList, mapInfo, unmarkedFrame, unmarkedFrameOccu,
-	unmarkedFramePCount, unmarkedFrameMPois, unmarkedFrameDS, unmarkedMultFrame)
+	unmarkedFramePCount, unmarkedFrameMPois, unmarkedFrameDS, unmarkedMultFrame,
+	unmarkedFramePCountOpen)
 
 # Formatting
 export(csvToUMF, formatLong, formatWide, formatMult, formatDistData)
